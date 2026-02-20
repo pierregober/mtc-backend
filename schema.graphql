@@ -1,0 +1,838 @@
+# schema.graphql (AppSync-style output)
+
+enum ClientStatus {
+  Active
+  Prospect
+  Paused
+  Churned
+}
+
+enum InteractionType {
+  Call
+  Demo
+  Contract
+  Email
+  FollowUp
+  Onsite
+  Other
+}
+
+enum InteractionStatus {
+  Scheduled
+  Completed
+  NoShow
+  Canceled
+  Rescheduled
+}
+
+enum InteractionOutcome {
+  None
+  Interested
+  NotInterested
+  NextStepDemo
+  ClosedWon
+  ClosedLost
+  Other
+}
+
+# ----------------------------
+# Create Inputs
+# ----------------------------
+
+input CreateUserInput {
+  _authMethod: String
+  _identities: AWSJSON
+  _initialTracker: String
+  _initialWorkspace: String
+
+  email: AWSEmail!
+  firstName: String
+  lastName: String
+  phone: String
+  picture: String
+  invitee: String
+  invited: [String]
+  stripe: String
+
+  id: String
+  workspace: String!
+  createdAt: Int
+  updatedAt: Int
+}
+
+input CreateClientInput {
+  name: String!
+  email: AWSEmail
+  phone: String
+  status: ClientStatus
+  notes: String
+
+  userId: String
+  id: String
+  dashboard: String!
+  createdAt: Int
+  updatedAt: Int
+}
+
+input CreateInteractionInput {
+  title: String
+  type: InteractionType
+  status: InteractionStatus
+
+  scheduledAt: Int!
+  attachment: String
+
+  outcome: InteractionOutcome
+  potentialRating: Int
+  actualRating: Int
+  nextStep: String
+  followUpAt: Int
+
+  notes: String
+  content: AWSJSON
+
+  clientId: String!
+  userId: String!
+  workspaceId: String!
+
+  id: String
+  createdAt: Int
+  updatedAt: Int
+}
+
+input CreateWorkspaceInput {
+  title: String
+  user: String!
+
+  id: String
+  createdAt: Int
+  updatedAt: Int
+}
+
+# ----------------------------
+# Update Inputs
+# ----------------------------
+
+input UpdateUserInput {
+  _authMethod: String
+  _identities: AWSJSON
+  _initialTracker: String
+  _initialWorkspace: String
+
+  email: AWSEmail
+  firstName: String
+  lastName: String
+  phone: String
+  picture: String
+  invitee: String
+  invited: [String]
+  stripe: String
+
+  id: String!
+  workspace: String
+  createdAt: Int
+  updatedAt: Int
+}
+
+input UpdateClientInput {
+  name: String
+  email: AWSEmail
+  phone: String
+  status: ClientStatus
+  notes: String
+
+  userId: String
+  id: String!
+  dashboard: String
+  createdAt: Int
+  updatedAt: Int
+}
+
+input UpdateInteractionInput {
+  title: String
+  type: InteractionType
+  status: InteractionStatus
+
+  scheduledAt: Int
+  attachment: String
+
+  outcome: InteractionOutcome
+  potentialRating: Int
+  actualRating: Int
+  nextStep: String
+  followUpAt: Int
+
+  notes: String
+  content: AWSJSON
+
+  clientId: String
+  userId: String
+  workspaceId: String
+
+  id: String!
+  createdAt: Int
+  updatedAt: Int
+}
+
+input UpdateWorkspaceInput {
+  title: String
+  user: String
+
+  id: String!
+  createdAt: Int
+  updatedAt: Int
+}
+
+# ----------------------------
+# Delete Inputs
+# ----------------------------
+
+input DeleteUserInput {
+  id: String!
+}
+
+input DeleteClientInput {
+  id: String!
+}
+
+input DeleteInteractionInput {
+  id: String!
+}
+
+input DeleteWorkspaceInput {
+  id: String!
+}
+
+# ----------------------------
+# Model Types
+# ----------------------------
+
+type user {
+  _authMethod: String
+  _identities: AWSJSON
+  _initialTracker: String
+  _initialWorkspace: String
+
+  email: AWSEmail!
+  firstName: String
+  lastName: String
+  phone: String
+  picture: String
+  invitee: String
+  invited: [String]
+  stripe: String
+
+  id: String!
+  workspace: String!
+  createdAt: Int!
+  updatedAt: Int!
+}
+
+type client {
+  name: String!
+  email: AWSEmail
+  phone: String
+  status: ClientStatus
+  notes: String
+
+  userId: String
+  user: user
+
+  id: String!
+  dashboard: String!
+  createdAt: Int!
+  updatedAt: Int!
+}
+
+type interaction {
+  title: String
+  type: InteractionType
+  status: InteractionStatus
+
+  scheduledAt: Int!
+  attachment: String
+
+  outcome: InteractionOutcome
+  potentialRating: Int
+  actualRating: Int
+  nextStep: String
+  followUpAt: Int
+
+  notes: String
+  content: AWSJSON
+
+  clientId: String!
+  client: client
+
+  userId: String!
+  user: user
+
+  workspaceId: String!
+  workspace: workspace
+
+  id: String!
+  createdAt: Int!
+  updatedAt: Int!
+}
+
+type workspace {
+  title: String
+  user: String!
+
+  id: String!
+  createdAt: Int!
+  updatedAt: Int!
+}
+
+# ----------------------------
+# Connections
+# ----------------------------
+
+type ModeluserConnection {
+  items: [user]!
+  nextToken: String
+}
+
+type ModelclientConnection {
+  items: [client]!
+  nextToken: String
+}
+
+type ModelinteractionConnection {
+  items: [interaction]!
+  nextToken: String
+}
+
+type ModelworkspaceConnection {
+  items: [workspace]!
+  nextToken: String
+}
+
+# ----------------------------
+# Base Filter Types (Amplify/AppSync style)
+# ----------------------------
+
+enum ModelAttributeTypes {
+  _null
+  binary
+  binarySet
+  bool
+  list
+  map
+  number
+  numberSet
+  string
+  stringSet
+}
+
+enum ModelSortDirection {
+  ASC
+  DESC
+}
+
+input ModelSizeInput {
+  between: [Int]
+  eq: Int
+  ge: Int
+  gt: Int
+  le: Int
+  lt: Int
+  ne: Int
+}
+
+input ModelStringInput {
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  beginsWith: String
+  between: [String]
+  contains: String
+  eq: String
+  ge: String
+  gt: String
+  le: String
+  lt: String
+  ne: String
+  notContains: String
+  size: ModelSizeInput
+}
+
+input ModelIDInput {
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  beginsWith: String
+  between: [String]
+  contains: String
+  eq: String
+  ge: String
+  gt: String
+  le: String
+  lt: String
+  ne: String
+  notContains: String
+  size: ModelSizeInput
+}
+
+input ModelIntInput {
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  between: [Int]
+  eq: Int
+  ge: Int
+  gt: Int
+  le: Int
+  lt: Int
+  ne: Int
+}
+
+input ModelBooleanInput {
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  eq: Boolean
+  ne: Boolean
+}
+
+# ----------------------------
+# Enum Filter Inputs
+# ----------------------------
+
+input ModelClientStatusInput {
+  eq: ClientStatus
+  ne: ClientStatus
+}
+
+input ModelInteractionTypeInput {
+  eq: InteractionType
+  ne: InteractionType
+}
+
+input ModelInteractionStatusInput {
+  eq: InteractionStatus
+  ne: InteractionStatus
+}
+
+input ModelInteractionOutcomeInput {
+  eq: InteractionOutcome
+  ne: InteractionOutcome
+}
+
+# ----------------------------
+# Condition Inputs
+# ----------------------------
+
+input ModelUserConditionInput {
+  and: [ModelUserConditionInput]
+  not: ModelUserConditionInput
+  or: [ModelUserConditionInput]
+
+  _authMethod: ModelStringInput
+  _identities: ModelStringInput
+  _initialTracker: ModelStringInput
+  _initialWorkspace: ModelStringInput
+
+  email: ModelStringInput
+  firstName: ModelStringInput
+  lastName: ModelStringInput
+  phone: ModelStringInput
+  picture: ModelStringInput
+  invitee: ModelStringInput
+  invited: ModelStringInput
+  stripe: ModelStringInput
+
+  workspace: ModelStringInput
+  createdAt: ModelIntInput
+  updatedAt: ModelIntInput
+}
+
+input ModelClientConditionInput {
+  and: [ModelClientConditionInput]
+  not: ModelClientConditionInput
+  or: [ModelClientConditionInput]
+
+  name: ModelStringInput
+  email: ModelStringInput
+  phone: ModelStringInput
+  status: ModelClientStatusInput
+  notes: ModelStringInput
+
+  userId: ModelIDInput
+  dashboard: ModelStringInput
+  createdAt: ModelIntInput
+  updatedAt: ModelIntInput
+}
+
+input ModelInteractionConditionInput {
+  and: [ModelInteractionConditionInput]
+  not: ModelInteractionConditionInput
+  or: [ModelInteractionConditionInput]
+
+  title: ModelStringInput
+  type: ModelInteractionTypeInput
+  status: ModelInteractionStatusInput
+
+  scheduledAt: ModelIntInput
+  attachment: ModelStringInput
+
+  outcome: ModelInteractionOutcomeInput
+  potentialRating: ModelIntInput
+  actualRating: ModelIntInput
+  nextStep: ModelStringInput
+  followUpAt: ModelIntInput
+
+  notes: ModelStringInput
+  content: ModelStringInput
+
+  clientId: ModelIDInput
+  userId: ModelIDInput
+  workspaceId: ModelIDInput
+
+  createdAt: ModelIntInput
+  updatedAt: ModelIntInput
+}
+
+input ModelWorkspaceConditionInput {
+  and: [ModelWorkspaceConditionInput]
+  not: ModelWorkspaceConditionInput
+  or: [ModelWorkspaceConditionInput]
+
+  title: ModelStringInput
+  user: ModelStringInput
+  createdAt: ModelIntInput
+  updatedAt: ModelIntInput
+}
+
+# ----------------------------
+# Filter Inputs
+# ----------------------------
+
+input ModelUserFilterInput {
+  and: [ModelUserFilterInput]
+  not: ModelUserFilterInput
+  or: [ModelUserFilterInput]
+
+  id: ModelIDInput
+  _authMethod: ModelStringInput
+  _identities: ModelStringInput
+  _initialTracker: ModelStringInput
+  _initialWorkspace: ModelStringInput
+
+  email: ModelStringInput
+  firstName: ModelStringInput
+  lastName: ModelStringInput
+  phone: ModelStringInput
+  picture: ModelStringInput
+  invitee: ModelStringInput
+  invited: ModelStringInput
+  stripe: ModelStringInput
+
+  workspace: ModelStringInput
+  createdAt: ModelIntInput
+  updatedAt: ModelIntInput
+}
+
+input ModelClientFilterInput {
+  and: [ModelClientFilterInput]
+  not: ModelClientFilterInput
+  or: [ModelClientFilterInput]
+
+  id: ModelIDInput
+  name: ModelStringInput
+  email: ModelStringInput
+  phone: ModelStringInput
+  status: ModelClientStatusInput
+  notes: ModelStringInput
+
+  userId: ModelIDInput
+  dashboard: ModelStringInput
+  createdAt: ModelIntInput
+  updatedAt: ModelIntInput
+}
+
+input ModelInteractionFilterInput {
+  and: [ModelInteractionFilterInput]
+  not: ModelInteractionFilterInput
+  or: [ModelInteractionFilterInput]
+
+  id: ModelIDInput
+  title: ModelStringInput
+  type: ModelInteractionTypeInput
+  status: ModelInteractionStatusInput
+
+  scheduledAt: ModelIntInput
+  attachment: ModelStringInput
+
+  outcome: ModelInteractionOutcomeInput
+  potentialRating: ModelIntInput
+  actualRating: ModelIntInput
+  nextStep: ModelStringInput
+  followUpAt: ModelIntInput
+
+  notes: ModelStringInput
+  content: ModelStringInput
+
+  clientId: ModelIDInput
+  userId: ModelIDInput
+  workspaceId: ModelIDInput
+
+  createdAt: ModelIntInput
+  updatedAt: ModelIntInput
+}
+
+input ModelWorkspaceFilterInput {
+  and: [ModelWorkspaceFilterInput]
+  not: ModelWorkspaceFilterInput
+  or: [ModelWorkspaceFilterInput]
+
+  id: ModelIDInput
+  title: ModelStringInput
+  user: ModelStringInput
+  createdAt: ModelIntInput
+  updatedAt: ModelIntInput
+}
+
+# ----------------------------
+# Subscription Filter Inputs (Amplify-style)
+# ----------------------------
+
+input ModelSubscriptionStringInput {
+  beginsWith: String
+  between: [String]
+  contains: String
+  eq: String
+  ge: String
+  gt: String
+  in: [String]
+  le: String
+  lt: String
+  ne: String
+  notContains: String
+  notIn: [String]
+}
+
+input ModelSubscriptionIDInput {
+  beginsWith: String
+  between: [String]
+  contains: String
+  eq: String
+  ge: String
+  gt: String
+  in: [String]
+  le: String
+  lt: String
+  ne: String
+  notContains: String
+  notIn: [String]
+}
+
+input ModelSubscriptionIntInput {
+  between: [Int]
+  eq: Int
+  ge: Int
+  gt: Int
+  in: [Int]
+  le: Int
+  lt: Int
+  ne: Int
+  notIn: [Int]
+}
+
+input ModelSubscriptionUserFilterInput {
+  and: [ModelSubscriptionUserFilterInput]
+  or: [ModelSubscriptionUserFilterInput]
+
+  id: ModelSubscriptionIDInput
+  email: ModelSubscriptionStringInput
+  workspace: ModelSubscriptionStringInput
+}
+
+input ModelSubscriptionClientFilterInput {
+  and: [ModelSubscriptionClientFilterInput]
+  or: [ModelSubscriptionClientFilterInput]
+
+  id: ModelSubscriptionIDInput
+  email: ModelSubscriptionStringInput
+  userId: ModelSubscriptionIDInput
+  dashboard: ModelSubscriptionStringInput
+}
+
+input ModelSubscriptionInteractionFilterInput {
+  and: [ModelSubscriptionInteractionFilterInput]
+  or: [ModelSubscriptionInteractionFilterInput]
+
+  id: ModelSubscriptionIDInput
+  userId: ModelSubscriptionIDInput
+  clientId: ModelSubscriptionIDInput
+  workspaceId: ModelSubscriptionIDInput
+  scheduledAt: ModelSubscriptionIntInput
+}
+
+input ModelSubscriptionWorkspaceFilterInput {
+  and: [ModelSubscriptionWorkspaceFilterInput]
+  or: [ModelSubscriptionWorkspaceFilterInput]
+
+  id: ModelSubscriptionIDInput
+  user: ModelSubscriptionStringInput
+}
+
+# ----------------------------
+# Operations
+# ----------------------------
+
+type Query {
+  getUser(id: String!): user
+  getClient(id: String!): client
+  getInteraction(id: String!): interaction
+  getWorkspace(id: String!): workspace
+
+  listUsers(
+    filter: ModelUserFilterInput
+    id: String
+    limit: Int
+    nextToken: String
+    sortDirection: ModelSortDirection
+  ): ModeluserConnection
+
+  listUserByEmail(
+    email: AWSEmail!
+    filter: ModelUserFilterInput
+    limit: Int
+    nextToken: String
+    sortDirection: ModelSortDirection
+  ): ModeluserConnection
+
+  listClients(
+    filter: ModelClientFilterInput
+    id: String
+    limit: Int
+    nextToken: String
+    sortDirection: ModelSortDirection
+  ): ModelclientConnection
+
+  listClientsByEmail(
+    email: AWSEmail!
+    filter: ModelClientFilterInput
+    limit: Int
+    nextToken: String
+    sortDirection: ModelSortDirection
+  ): ModelclientConnection
+
+  listInteractions(
+    filter: ModelInteractionFilterInput
+    id: String
+    limit: Int
+    nextToken: String
+    sortDirection: ModelSortDirection
+  ): ModelinteractionConnection
+
+  listInteractionsByUserId(
+    userId: String!
+    filter: ModelInteractionFilterInput
+    limit: Int
+    nextToken: String
+    sortDirection: ModelSortDirection
+  ): ModelinteractionConnection
+
+  listInteractionsByClientId(
+    clientId: String!
+    filter: ModelInteractionFilterInput
+    limit: Int
+    nextToken: String
+    sortDirection: ModelSortDirection
+  ): ModelinteractionConnection
+
+  listInteractionsByWorkspaceId(
+    workspaceId: String!
+    filter: ModelInteractionFilterInput
+    limit: Int
+    nextToken: String
+    sortDirection: ModelSortDirection
+  ): ModelinteractionConnection
+
+  listWorkspaces(
+    filter: ModelWorkspaceFilterInput
+    id: String
+    limit: Int
+    nextToken: String
+    sortDirection: ModelSortDirection
+  ): ModelworkspaceConnection
+}
+
+type Mutation {
+  createUser(condition: ModelUserConditionInput, input: CreateUserInput!): user
+  updateUser(condition: ModelUserConditionInput, input: UpdateUserInput!): user
+  deleteUser(condition: ModelUserConditionInput, input: DeleteUserInput!): user
+
+  createClient(
+    condition: ModelClientConditionInput
+    input: CreateClientInput!
+  ): client
+  updateClient(
+    condition: ModelClientConditionInput
+    input: UpdateClientInput!
+  ): client
+  deleteClient(
+    condition: ModelClientConditionInput
+    input: DeleteClientInput!
+  ): client
+
+  createInteraction(
+    condition: ModelInteractionConditionInput
+    input: CreateInteractionInput!
+  ): interaction
+  updateInteraction(
+    condition: ModelInteractionConditionInput
+    input: UpdateInteractionInput!
+  ): interaction
+  deleteInteraction(
+    condition: ModelInteractionConditionInput
+    input: DeleteInteractionInput!
+  ): interaction
+
+  createWorkspace(
+    condition: ModelWorkspaceConditionInput
+    input: CreateWorkspaceInput!
+  ): workspace
+  updateWorkspace(
+    condition: ModelWorkspaceConditionInput
+    input: UpdateWorkspaceInput!
+  ): workspace
+  deleteWorkspace(
+    condition: ModelWorkspaceConditionInput
+    input: DeleteWorkspaceInput!
+  ): workspace
+}
+
+type Subscription {
+  onCreateUser(filter: ModelSubscriptionUserFilterInput): user
+    @aws_subscribe(mutations: ["createUser"])
+  onUpdateUser(filter: ModelSubscriptionUserFilterInput): user
+    @aws_subscribe(mutations: ["updateUser"])
+  onDeleteUser(filter: ModelSubscriptionUserFilterInput): user
+    @aws_subscribe(mutations: ["deleteUser"])
+
+  onCreateClient(filter: ModelSubscriptionClientFilterInput): client
+    @aws_subscribe(mutations: ["createClient"])
+  onUpdateClient(filter: ModelSubscriptionClientFilterInput): client
+    @aws_subscribe(mutations: ["updateClient"])
+  onDeleteClient(filter: ModelSubscriptionClientFilterInput): client
+    @aws_subscribe(mutations: ["deleteClient"])
+
+  onCreateInteraction(filter: ModelSubscriptionInteractionFilterInput): interaction
+    @aws_subscribe(mutations: ["createInteraction"])
+  onUpdateInteraction(filter: ModelSubscriptionInteractionFilterInput): interaction
+    @aws_subscribe(mutations: ["updateInteraction"])
+  onDeleteInteraction(filter: ModelSubscriptionInteractionFilterInput): interaction
+    @aws_subscribe(mutations: ["deleteInteraction"])
+
+  onCreateWorkspace(filter: ModelSubscriptionWorkspaceFilterInput): workspace
+    @aws_subscribe(mutations: ["createWorkspace"])
+  onUpdateWorkspace(filter: ModelSubscriptionWorkspaceFilterInput): workspace
+    @aws_subscribe(mutations: ["updateWorkspace"])
+  onDeleteWorkspace(filter: ModelSubscriptionWorkspaceFilterInput): workspace
+    @aws_subscribe(mutations: ["deleteWorkspace"])
+}
+
+schema {
+  query: Query
+  mutation: Mutation
+  subscription: Subscription
+}

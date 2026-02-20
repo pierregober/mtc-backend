@@ -1,0 +1,61 @@
+service: mtc-backend
+
+frameworkVersion: "3.40.0"
+
+plugins:
+  - serverless-appsync-plugin
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  profile: mtc-pierre
+  region: us-west-1
+  environment:
+    AWS_ACCOUNT_ID: ${aws:accountId}
+
+appSync:
+  name: mtc
+  logging:
+    level: ALL
+    retentionInDays: 14
+  authentication:
+    type: OPENID_CONNECT
+    config:
+      issuer: https://movementtocontact.us.auth0.com
+      clientId: P6CqYvcXoqxuAzCiHGLe9hT3ImqXhjDb
+  schema: schema.graphql
+
+  dataSources:
+    NONE:
+      type: NONE
+    mtcProdInteraction:
+      type: AMAZON_DYNAMODB
+      config:
+        tableName: mtc-prod-interaction
+        serviceRoleArn:
+          Fn::GetAtt: [AppSyncLambdaServiceRole, Arn]
+
+  resolvers:
+    - ${file(resolvers/interaction/_interaction.yml)}
+
+resources:
+  Resources:
+    AppSyncLambdaServiceRole:
+      Type: AWS::IAM::Role
+      Properties:
+        RoleName: mtc_appsync_lambda_service_role
+        AssumeRolePolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service: appsync.amazonaws.com
+              Action: sts:AssumeRole
+        Policies:
+          - PolicyName: AllowAllAccess
+            PolicyDocument:
+              Version: "2012-10-17"
+              Statement:
+                - Effect: Allow
+                  Action: "*"
+                  Resource: "*"

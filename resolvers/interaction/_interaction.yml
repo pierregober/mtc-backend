@@ -1,0 +1,11 @@
+# QUERY
+Query.getInteraction:
+  kind: UNIT
+  dataSource: mtcProdInteraction
+  code: resolvers/interaction/getInteraction.ts
+
+# MUTATION
+Mutation.createInteraction:
+  kind: UNIT
+  dataSource: mtcProdInteraction
+  code: resolvers/interaction/createInteraction.ts
