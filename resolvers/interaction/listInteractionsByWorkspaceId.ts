@@ -8,10 +8,38 @@ import type { Context } from '@aws-appsync/utils'
 export function request(ctx: Context) {
   const { workspaceId, filter, limit, nextToken, sortDirection } = ctx.args
 
+  let scheduledAt
+  let nonKeyFilter = filter
+
+  if (filter && filter.scheduledAt) {
+    scheduledAt = filter.scheduledAt
+
+    const rest = {}
+    for (const key in filter) {
+      if (key !== 'scheduledAt') {
+        rest[key] = filter[key]
+      }
+    }
+
+    if (Object.keys(rest).length > 0) {
+      nonKeyFilter = rest
+    } else {
+      nonKeyFilter = undefined
+    }
+  }
+
+  const queryInput = {
+    workspaceId: { eq: workspaceId },
+  }
+
+  if (scheduledAt) {
+    queryInput.scheduledAt = scheduledAt
+  }
+
   return query({
     index: 'interactionByWorkspace',
-    query: { workspaceId: { eq: workspaceId } },
-    filter,
+    query: queryInput,
+    filter: nonKeyFilter,
     limit,
     nextToken,
     scanIndexForward: sortDirection !== 'DESC',
