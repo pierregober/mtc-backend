@@ -3,9 +3,47 @@ Query.getInteraction:
   kind: UNIT
   dataSource: mtcProdInteraction
   code: resolvers/interaction/getInteraction.ts
+Query.listInteractions:
+  kind: UNIT
+  dataSource: mtcProdInteraction
+  code: resolvers/interaction/listInteractions.ts
+Query.listInteractionsByUserId:
+  kind: UNIT
+  dataSource: mtcProdInteraction
+  code: resolvers/interaction/listInteractionsByUserId.ts
+Query.listInteractionsByClientId:
+  kind: UNIT
+  dataSource: mtcProdInteraction
+  code: resolvers/interaction/listInteractionsByClientId.ts
+Query.listInteractionsByWorkspaceId:
+  kind: UNIT
+  dataSource: mtcProdInteraction
+  code: resolvers/interaction/listInteractionsByWorkspaceId.ts
 
 # MUTATION
 Mutation.createInteraction:
   kind: UNIT
   dataSource: mtcProdInteraction
   code: resolvers/interaction/createInteraction.ts
+Mutation.updateInteraction:
+  kind: UNIT
+  dataSource: mtcProdInteraction
+  code: resolvers/interaction/updateInteraction.ts
+Mutation.deleteInteraction:
+  kind: UNIT
+  dataSource: mtcProdInteraction
+  code: resolvers/interaction/deleteInteraction.ts
+
+# SUBSCRIPTION
+Subscription.onCreateInteraction:
+  kind: UNIT
+  dataSource: NONE
+  code: resolvers/interaction/onCreateInteraction.ts
+Subscription.onUpdateInteraction:
+  kind: UNIT
+  dataSource: NONE
+  code: resolvers/interaction/onUpdateInteraction.ts
+Subscription.onDeleteInteraction:
+  kind: UNIT
+  dataSource: NONE
+  code: resolvers/interaction/onDeleteInteraction.ts
