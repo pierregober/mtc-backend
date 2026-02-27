@@ -1,0 +1,37 @@
+# QUERY
+Query.getMessage:
+  kind: UNIT
+  dataSource: mtcProdMessage
+  code: resolvers/message/getMessage.ts
+Query.listMessages:
+  kind: UNIT
+  dataSource: mtcProdMessage
+  code: resolvers/message/listMessages.ts
+
+# MUTATION
+Mutation.createMessage:
+  kind: UNIT
+  dataSource: mtcProdMessage
+  code: resolvers/message/createMessage.ts
+Mutation.updateMessage:
+  kind: UNIT
+  dataSource: mtcProdMessage
+  code: resolvers/message/updateMessage.ts
+Mutation.deleteMessage:
+  kind: UNIT
+  dataSource: mtcProdMessage
+  code: resolvers/message/deleteMessage.ts
+
+# SUBSCRIPTION
+Subscription.onCreateMessage:
+  kind: UNIT
+  dataSource: NONE
+  code: resolvers/message/onCreateMessage.ts
+Subscription.onUpdateMessage:
+  kind: UNIT
+  dataSource: NONE
+  code: resolvers/message/onUpdateMessage.ts
+Subscription.onDeleteMessage:
+  kind: UNIT
+  dataSource: NONE
+  code: resolvers/message/onDeleteMessage.ts

@@ -122,6 +122,16 @@ input CreateUserNameInput {
   updatedAt: Int
 }
 
+input CreateMessageInput {
+  body: String!
+  userId: String!
+  username: String!
+
+  id: String
+  createdAt: Int
+  updatedAt: Int
+}
+
 input UpdateUserNameInput {
   username: String
   avatar: String
@@ -208,6 +218,16 @@ input UpdateWorkspaceInput {
   updatedAt: Int
 }
 
+input UpdateMessageInput {
+  body: String
+  userId: String
+  username: String
+
+  id: String!
+  createdAt: Int
+  updatedAt: Int
+}
+
 # ----------------------------
 # Delete Inputs
 # ----------------------------
@@ -229,6 +249,10 @@ input DeleteWorkspaceInput {
 }
 
 input DeleteUserNameInput {
+  id: String!
+}
+
+input DeleteMessageInput {
   id: String!
 }
 
@@ -325,6 +349,16 @@ type username {
   updatedAt: Int!
 }
 
+type message {
+  body: String!
+  userId: String!
+  username: String!
+
+  id: String!
+  createdAt: Int!
+  updatedAt: Int!
+}
+
 # ----------------------------
 # Connections
 # ----------------------------
@@ -346,6 +380,11 @@ type ModelinteractionConnection {
 
 type ModelworkspaceConnection {
   items: [workspace]!
+  nextToken: String
+}
+
+type ModelmessageConnection {
+  items: [message]!
   nextToken: String
 }
 
@@ -543,6 +582,18 @@ input ModelWorkspaceConditionInput {
   updatedAt: ModelIntInput
 }
 
+input ModelMessageConditionInput {
+  and: [ModelMessageConditionInput]
+  not: ModelMessageConditionInput
+  or: [ModelMessageConditionInput]
+
+  body: ModelStringInput
+  userId: ModelIDInput
+  username: ModelStringInput
+  createdAt: ModelIntInput
+  updatedAt: ModelIntInput
+}
+
 # ----------------------------
 # Filter Inputs
 # ----------------------------
@@ -630,6 +681,19 @@ input ModelWorkspaceFilterInput {
   id: ModelIDInput
   title: ModelStringInput
   user: ModelStringInput
+  createdAt: ModelIntInput
+  updatedAt: ModelIntInput
+}
+
+input ModelMessageFilterInput {
+  and: [ModelMessageFilterInput]
+  not: ModelMessageFilterInput
+  or: [ModelMessageFilterInput]
+
+  id: ModelIDInput
+  body: ModelStringInput
+  userId: ModelIDInput
+  username: ModelStringInput
   createdAt: ModelIntInput
   updatedAt: ModelIntInput
 }
@@ -725,6 +789,17 @@ input ModelSubscriptionWorkspaceFilterInput {
   user: ModelSubscriptionStringInput
 }
 
+input ModelSubscriptionMessageFilterInput {
+  and: [ModelSubscriptionMessageFilterInput]
+  or: [ModelSubscriptionMessageFilterInput]
+
+  id: ModelSubscriptionIDInput
+  body: ModelSubscriptionStringInput
+  userId: ModelSubscriptionIDInput
+  username: ModelSubscriptionStringInput
+  createdAt: ModelSubscriptionIntInput
+}
+
 # ----------------------------
 # Operations
 # ----------------------------
@@ -735,6 +810,7 @@ type Query {
   getClient(id: String!): client
   getInteraction(id: String!): interaction
   getWorkspace(id: String!): workspace
+  getMessage(id: String!): message
 
   listUsers(
     filter: ModelUserFilterInput
@@ -775,6 +851,14 @@ type Query {
     nextToken: String
     sortDirection: ModelSortDirection
   ): ModelinteractionConnection
+
+  listMessages(
+    filter: ModelMessageFilterInput
+    id: String
+    limit: Int
+    nextToken: String
+    sortDirection: ModelSortDirection
+  ): ModelmessageConnection
 
   listInteractionsByUserId(
     userId: String!
@@ -847,6 +931,19 @@ type Mutation {
     input: DeleteInteractionInput!
   ): interaction
 
+  createMessage(
+    condition: ModelMessageConditionInput
+    input: CreateMessageInput!
+  ): message
+  updateMessage(
+    condition: ModelMessageConditionInput
+    input: UpdateMessageInput!
+  ): message
+  deleteMessage(
+    condition: ModelMessageConditionInput
+    input: DeleteMessageInput!
+  ): message
+
   createWorkspace(
     condition: ModelWorkspaceConditionInput
     input: CreateWorkspaceInput!
@@ -882,6 +979,13 @@ type Subscription {
     @aws_subscribe(mutations: ["updateInteraction"])
   onDeleteInteraction(filter: ModelSubscriptionInteractionFilterInput): interaction
     @aws_subscribe(mutations: ["deleteInteraction"])
+
+  onCreateMessage(filter: ModelSubscriptionMessageFilterInput): message
+    @aws_subscribe(mutations: ["createMessage"])
+  onUpdateMessage(filter: ModelSubscriptionMessageFilterInput): message
+    @aws_subscribe(mutations: ["updateMessage"])
+  onDeleteMessage(filter: ModelSubscriptionMessageFilterInput): message
+    @aws_subscribe(mutations: ["deleteMessage"])
 
   onCreateWorkspace(filter: ModelSubscriptionWorkspaceFilterInput): workspace
     @aws_subscribe(mutations: ["createWorkspace"])
