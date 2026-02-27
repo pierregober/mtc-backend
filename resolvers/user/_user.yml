@@ -1,0 +1,41 @@
+# QUERY
+Query.getUser:
+  kind: UNIT
+  dataSource: mtcProdUser
+  code: resolvers/user/getUser.ts
+Query.listUsers:
+  kind: UNIT
+  dataSource: mtcProdUser
+  code: resolvers/user/listUsers.ts
+Query.listUserByEmail:
+  kind: UNIT
+  dataSource: mtcProdUser
+  code: resolvers/user/listUserByEmail.ts
+
+# MUTATION
+Mutation.createUser:
+  kind: UNIT
+  dataSource: mtcProdUser
+  code: resolvers/user/createUser.ts
+Mutation.updateUser:
+  kind: UNIT
+  dataSource: mtcProdUser
+  code: resolvers/user/updateUser.ts
+Mutation.deleteUser:
+  kind: UNIT
+  dataSource: mtcProdUser
+  code: resolvers/user/deleteUser.ts
+
+# SUBSCRIPTION
+Subscription.onCreateUser:
+  kind: UNIT
+  dataSource: NONE
+  code: resolvers/user/onCreateUser.ts
+Subscription.onUpdateUser:
+  kind: UNIT
+  dataSource: NONE
+  code: resolvers/user/onUpdateUser.ts
+Subscription.onDeleteUser:
+  kind: UNIT
+  dataSource: NONE
+  code: resolvers/user/onDeleteUser.ts

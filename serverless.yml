@@ -28,6 +28,18 @@ appSync:
   dataSources:
     NONE:
       type: NONE
+    mtcProdUser:
+      type: AMAZON_DYNAMODB
+      config:
+        tableName: mtc-prod-user
+        serviceRoleArn:
+          Fn::GetAtt: [AppSyncLambdaServiceRole, Arn]
+    mtcProdWorkspace:
+      type: AMAZON_DYNAMODB
+      config:
+        tableName: mtc-prod-workspace
+        serviceRoleArn:
+          Fn::GetAtt: [AppSyncLambdaServiceRole, Arn]
     mtcProdInteraction:
       type: AMAZON_DYNAMODB
       config:
@@ -37,6 +49,8 @@ appSync:
 
   resolvers:
     - ${file(resolvers/interaction/_interaction.yml)}
+    - ${file(resolvers/user/_user.yml)}
+    - ${file(resolvers/workspace/_workspace.yml)}
 
 resources:
   Resources:

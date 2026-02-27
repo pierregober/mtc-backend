@@ -1,0 +1,37 @@
+# QUERY
+Query.getWorkspace:
+  kind: UNIT
+  dataSource: mtcProdWorkspace
+  code: resolvers/workspace/getWorkspace.ts
+Query.listWorkspaces:
+  kind: UNIT
+  dataSource: mtcProdWorkspace
+  code: resolvers/workspace/listWorkspaces.ts
+
+# MUTATION
+Mutation.createWorkspace:
+  kind: UNIT
+  dataSource: mtcProdWorkspace
+  code: resolvers/workspace/createWorkspace.ts
+Mutation.updateWorkspace:
+  kind: UNIT
+  dataSource: mtcProdWorkspace
+  code: resolvers/workspace/updateWorkspace.ts
+Mutation.deleteWorkspace:
+  kind: UNIT
+  dataSource: mtcProdWorkspace
+  code: resolvers/workspace/deleteWorkspace.ts
+
+# SUBSCRIPTION
+Subscription.onCreateWorkspace:
+  kind: UNIT
+  dataSource: NONE
+  code: resolvers/workspace/onCreateWorkspace.ts
+Subscription.onUpdateWorkspace:
+  kind: UNIT
+  dataSource: NONE
+  code: resolvers/workspace/onUpdateWorkspace.ts
+Subscription.onDeleteWorkspace:
+  kind: UNIT
+  dataSource: NONE
+  code: resolvers/workspace/onDeleteWorkspace.ts
