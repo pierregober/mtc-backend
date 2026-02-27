@@ -1,0 +1,19 @@
+# QUERY
+Query.getUserName:
+  kind: UNIT
+  dataSource: mtcProdUserName
+  code: resolvers/username/getUserName.ts
+
+# MUTATION
+Mutation.createUserName:
+  kind: UNIT
+  dataSource: mtcProdUserName
+  code: resolvers/username/createUserName.ts
+Mutation.updateUserName:
+  kind: UNIT
+  dataSource: mtcProdUserName
+  code: resolvers/username/updateUserName.ts
+Mutation.deleteUserName:
+  kind: UNIT
+  dataSource: mtcProdUserName
+  code: resolvers/username/deleteUserName.ts

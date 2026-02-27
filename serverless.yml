@@ -40,6 +40,12 @@ appSync:
         tableName: mtc-prod-user
         serviceRoleArn:
           Fn::GetAtt: [AppSyncLambdaServiceRole, Arn]
+    mtcProdUserName:
+      type: AMAZON_DYNAMODB
+      config:
+        tableName: mtc-prod-username
+        serviceRoleArn:
+          Fn::GetAtt: [AppSyncLambdaServiceRole, Arn]
     mtcProdWorkspace:
       type: AMAZON_DYNAMODB
       config:
@@ -64,6 +70,7 @@ appSync:
   resolvers:
     - ${file(resolvers/client/_client.yml)}
     - ${file(resolvers/interaction/_interaction.yml)}
+    - ${file(resolvers/username/_username.yml)}
     - ${file(resolvers/user/_user.yml)}
     - ${file(resolvers/workspace/_workspace.yml)}
 

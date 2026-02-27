@@ -48,11 +48,13 @@ input CreateUserInput {
   email: AWSEmail!
   firstName: String
   lastName: String
+  username: String
   phone: String
   picture: String
   invitee: String
   invited: [String]
   stripe: String
+  onboarding: Boolean
 
   id: String
   workspace: String!
@@ -110,6 +112,26 @@ input CreateWorkspaceInput {
   updatedAt: Int
 }
 
+input CreateUserNameInput {
+  username: String!
+  avatar: String
+  userId: String!
+
+  id: String
+  createdAt: Int
+  updatedAt: Int
+}
+
+input UpdateUserNameInput {
+  username: String
+  avatar: String
+  userId: String
+
+  id: String!
+  createdAt: Int
+  updatedAt: Int
+}
+
 # ----------------------------
 # Update Inputs
 # ----------------------------
@@ -123,11 +145,13 @@ input UpdateUserInput {
   email: AWSEmail
   firstName: String
   lastName: String
+  username: String
   phone: String
   picture: String
   invitee: String
   invited: [String]
   stripe: String
+  onboarding: Boolean
 
   id: String!
   workspace: String
@@ -204,6 +228,10 @@ input DeleteWorkspaceInput {
   id: String!
 }
 
+input DeleteUserNameInput {
+  id: String!
+}
+
 # ----------------------------
 # Model Types
 # ----------------------------
@@ -217,11 +245,13 @@ type user {
   email: AWSEmail!
   firstName: String
   lastName: String
+  username: String
   phone: String
   picture: String
   invitee: String
   invited: [String]
   stripe: String
+  onboarding: Boolean
 
   id: String!
   workspace: String!
@@ -279,6 +309,16 @@ type interaction {
 type workspace {
   title: String
   user: String!
+
+  id: String!
+  createdAt: Int!
+  updatedAt: Int!
+}
+
+type username {
+  username: String!
+  avatar: String
+  userId: String!
 
   id: String!
   createdAt: Int!
@@ -433,11 +473,13 @@ input ModelUserConditionInput {
   email: ModelStringInput
   firstName: ModelStringInput
   lastName: ModelStringInput
+  username: ModelStringInput
   phone: ModelStringInput
   picture: ModelStringInput
   invitee: ModelStringInput
   invited: ModelStringInput
   stripe: ModelStringInput
+  onboarding: ModelBooleanInput
 
   workspace: ModelStringInput
   createdAt: ModelIntInput
@@ -519,11 +561,13 @@ input ModelUserFilterInput {
   email: ModelStringInput
   firstName: ModelStringInput
   lastName: ModelStringInput
+  username: ModelStringInput
   phone: ModelStringInput
   picture: ModelStringInput
   invitee: ModelStringInput
   invited: ModelStringInput
   stripe: ModelStringInput
+  onboarding: ModelBooleanInput
 
   workspace: ModelStringInput
   createdAt: ModelIntInput
@@ -636,13 +680,20 @@ input ModelSubscriptionIntInput {
   notIn: [Int]
 }
 
+input ModelSubscriptionBooleanInput {
+  eq: Boolean
+  ne: Boolean
+}
+
 input ModelSubscriptionUserFilterInput {
   and: [ModelSubscriptionUserFilterInput]
   or: [ModelSubscriptionUserFilterInput]
 
   id: ModelSubscriptionIDInput
   email: ModelSubscriptionStringInput
+  username: ModelSubscriptionStringInput
   workspace: ModelSubscriptionStringInput
+  onboarding: ModelSubscriptionBooleanInput
 }
 
 input ModelSubscriptionClientFilterInput {
@@ -680,6 +731,7 @@ input ModelSubscriptionWorkspaceFilterInput {
 
 type Query {
   getUser(id: String!): user
+  getUserName(id: String!): username
   getClient(id: String!): client
   getInteraction(id: String!): interaction
   getWorkspace(id: String!): workspace
@@ -759,6 +811,9 @@ type Query {
 
 type Mutation {
   createUser(condition: ModelUserConditionInput, input: CreateUserInput!): user
+  createUserName(input: CreateUserNameInput!): username
+  updateUserName(input: UpdateUserNameInput!): username
+  deleteUserName(input: DeleteUserNameInput!): username
   updateUser(condition: ModelUserConditionInput, input: UpdateUserInput!): user
   deleteUser(condition: ModelUserConditionInput, input: DeleteUserInput!): user
 
