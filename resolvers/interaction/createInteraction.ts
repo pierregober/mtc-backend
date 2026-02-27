@@ -9,40 +9,42 @@ import { sanitizeObject } from '../_shared';
 import type { Context } from "@aws-appsync/utils"
 
 export function request(ctx: Context) {
-  const input = ctx.args.input;
-  const now = util.time.nowEpochSeconds();
-  const id = `INTERACTION-${util.autoId()}`;
+  const input = ctx.args.input
+  const now = util.time.nowEpochSeconds()
+  const id = `INTERACTION-${util.autoId()}`
+
+  const clientId =
+    typeof input?.clientId === 'string' ? input.clientId.trim() : ''
+
+  if (!clientId) {
+    util.error(
+      'createInteraction requires input.clientId',
+      'BadRequest',
+      'createInteraction',
+    )
+  }
+
+  const { clientName, ...restInput } = input
 
   const item = sanitizeObject({
     id,
     createdAt: now,
     updatedAt: now,
-    ...input,
-  });
+    ...restInput,
+    clientId,
+  })
 
   return put({
     key: { id: item.id },
     condition: ctx.args.condition,
     item
-  });
+  })
 }
 
 export function response(ctx: Context) {
   if (ctx.error) {
-    util.error(ctx.error.message, ctx.error.type, "createInteraction");
+    util.error(ctx.error.message, ctx.error.type, "createInteraction")
   }
-
-  console.log(ctx.result);
-  /*
-    {
-      "createdAt": 1754414426,
-      "companyId": "dd",
-      "id": "JOB-d18c42f6-7961-43d3-8155-cfee342d2c8b",
-      "user": "USER-google-oauth2|105810845156120758169",
-      "updatedAt": 1754414426,
-      "workspaceId": "ddd"
-    }
-  */
 
   return ctx.result
 }

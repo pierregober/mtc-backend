@@ -91,7 +91,8 @@ input CreateInteractionInput {
   notes: String
   content: AWSJSON
 
-  clientId: String!
+  clientId: String
+  clientName: String
   userId: String!
   workspaceId: String!
 
@@ -775,6 +776,10 @@ type Mutation {
   ): client
 
   createInteraction(
+    condition: ModelInteractionConditionInput
+    input: CreateInteractionInput!
+  ): interaction
+  pipelineCreateInteractionRecord(
     condition: ModelInteractionConditionInput
     input: CreateInteractionInput!
   ): interaction

@@ -35,3 +35,11 @@ Subscription.onDeleteWorkspace:
   kind: UNIT
   dataSource: NONE
   code: resolvers/workspace/onDeleteWorkspace.ts
+
+# FIELD
+workspace.user:
+  kind: UNIT
+  type: workspace
+  field: user
+  dataSource: mtcProdUser
+  code: resolvers/workspace/field/user.ts

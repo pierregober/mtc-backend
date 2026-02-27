@@ -9,7 +9,7 @@ export function request(ctx: Context) {
   const { email, filter, limit, nextToken, sortDirection } = ctx.args
 
   return query({
-    index: 'byEmail',
+    index: 'userByEmail',
     query: { email: { eq: email } },
     filter,
     limit,

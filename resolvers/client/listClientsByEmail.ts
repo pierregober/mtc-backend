@@ -6,11 +6,11 @@ import { util } from '@aws-appsync/utils'
 import type { Context } from '@aws-appsync/utils'
 
 export function request(ctx: Context) {
-  const { workspaceId, filter, limit, nextToken, sortDirection } = ctx.args
+  const { email, filter, limit, nextToken, sortDirection } = ctx.args
 
   return query({
-    index: 'interactionByWorkspace',
-    query: { workspaceId: { eq: workspaceId } },
+    index: 'byEmail',
+    query: { email: { eq: email } },
     filter,
     limit,
     nextToken,
@@ -20,7 +20,7 @@ export function request(ctx: Context) {
 
 export function response(ctx: Context) {
   if (ctx.error) {
-    util.error(ctx.error.message, ctx.error.type, 'listInteractionsByWorkspaceId')
+    util.error(ctx.error.message, ctx.error.type, 'listClientsByEmail')
   }
   return ctx.result
 }

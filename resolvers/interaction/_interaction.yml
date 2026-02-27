@@ -21,6 +21,12 @@ Query.listInteractionsByWorkspaceId:
   code: resolvers/interaction/listInteractionsByWorkspaceId.ts
 
 # MUTATION
+Mutation.pipelineCreateInteractionRecord:
+  kind: PIPELINE
+  code: resolvers/interaction/createInteractionPipeline.ts
+  functions:
+    - createInteractionResolveOrCreateClient
+    - createInteractionRecord
 Mutation.createInteraction:
   kind: UNIT
   dataSource: mtcProdInteraction
@@ -47,3 +53,23 @@ Subscription.onDeleteInteraction:
   kind: UNIT
   dataSource: NONE
   code: resolvers/interaction/onDeleteInteraction.ts
+
+# FIELD
+interaction.client:
+  kind: UNIT
+  type: interaction
+  field: client
+  dataSource: mtcProdClient
+  code: resolvers/interaction/field/client.ts
+interaction.user:
+  kind: UNIT
+  type: interaction
+  field: user
+  dataSource: mtcProdUser
+  code: resolvers/interaction/field/user.ts
+interaction.workspace:
+  kind: UNIT
+  type: interaction
+  field: workspace
+  dataSource: mtcProdWorkspace
+  code: resolvers/interaction/field/workspace.ts

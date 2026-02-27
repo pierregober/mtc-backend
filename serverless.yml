@@ -28,6 +28,12 @@ appSync:
   dataSources:
     NONE:
       type: NONE
+    mtcProdClient:
+      type: AMAZON_DYNAMODB
+      config:
+        tableName: mtc-prod-client
+        serviceRoleArn:
+          Fn::GetAtt: [AppSyncLambdaServiceRole, Arn]
     mtcProdUser:
       type: AMAZON_DYNAMODB
       config:
@@ -47,7 +53,16 @@ appSync:
         serviceRoleArn:
           Fn::GetAtt: [AppSyncLambdaServiceRole, Arn]
 
+  pipelineFunctions:
+    createInteractionResolveOrCreateClient:
+      dataSource: mtcProdClient
+      code: pipelines/resolveOrCreateClient.ts
+    createInteractionRecord:
+      dataSource: mtcProdInteraction
+      code: pipelines/createInteraction.ts
+
   resolvers:
+    - ${file(resolvers/client/_client.yml)}
     - ${file(resolvers/interaction/_interaction.yml)}
     - ${file(resolvers/user/_user.yml)}
     - ${file(resolvers/workspace/_workspace.yml)}

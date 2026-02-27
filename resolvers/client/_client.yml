@@ -1,0 +1,49 @@
+# QUERY
+Query.getClient:
+  kind: UNIT
+  dataSource: mtcProdClient
+  code: resolvers/client/getClient.ts
+Query.listClients:
+  kind: UNIT
+  dataSource: mtcProdClient
+  code: resolvers/client/listClients.ts
+Query.listClientsByEmail:
+  kind: UNIT
+  dataSource: mtcProdClient
+  code: resolvers/client/listClientsByEmail.ts
+
+# MUTATION
+Mutation.createClient:
+  kind: UNIT
+  dataSource: mtcProdClient
+  code: resolvers/client/createClient.ts
+Mutation.updateClient:
+  kind: UNIT
+  dataSource: mtcProdClient
+  code: resolvers/client/updateClient.ts
+Mutation.deleteClient:
+  kind: UNIT
+  dataSource: mtcProdClient
+  code: resolvers/client/deleteClient.ts
+
+# SUBSCRIPTION
+Subscription.onCreateClient:
+  kind: UNIT
+  dataSource: NONE
+  code: resolvers/client/onCreateClient.ts
+Subscription.onUpdateClient:
+  kind: UNIT
+  dataSource: NONE
+  code: resolvers/client/onUpdateClient.ts
+Subscription.onDeleteClient:
+  kind: UNIT
+  dataSource: NONE
+  code: resolvers/client/onDeleteClient.ts
+
+# FIELD
+client.user:
+  kind: UNIT
+  type: client
+  field: user
+  dataSource: mtcProdUser
+  code: resolvers/client/field/user.ts
