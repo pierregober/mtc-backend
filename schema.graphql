@@ -35,6 +35,12 @@ enum InteractionOutcome {
   Other
 }
 
+enum GoalType {
+  Weekly
+  Monthly
+  Quarterly
+}
+
 # ----------------------------
 # Create Inputs
 # ----------------------------
@@ -126,6 +132,20 @@ input CreateMessageInput {
   body: String!
   userId: String!
   username: String!
+
+  id: String
+  createdAt: Int
+  updatedAt: Int
+}
+
+input CreateGoalInput {
+  title: String!
+  type: GoalType!
+  completed: Boolean
+  position: Int
+
+  workspaceId: String!
+  userId: String
 
   id: String
   createdAt: Int
@@ -228,6 +248,20 @@ input UpdateMessageInput {
   updatedAt: Int
 }
 
+input UpdateGoalInput {
+  title: String
+  type: GoalType
+  completed: Boolean
+  position: Int
+
+  workspaceId: String
+  userId: String
+
+  id: String!
+  createdAt: Int
+  updatedAt: Int
+}
+
 # ----------------------------
 # Delete Inputs
 # ----------------------------
@@ -253,6 +287,10 @@ input DeleteUserNameInput {
 }
 
 input DeleteMessageInput {
+  id: String!
+}
+
+input DeleteGoalInput {
   id: String!
 }
 
@@ -359,6 +397,23 @@ type message {
   updatedAt: Int!
 }
 
+type goal {
+  title: String!
+  type: GoalType!
+  completed: Boolean
+  position: Int
+
+  workspaceId: String!
+  workspace: workspace
+
+  userId: String
+  user: user
+
+  id: String!
+  createdAt: Int!
+  updatedAt: Int!
+}
+
 # ----------------------------
 # Connections
 # ----------------------------
@@ -385,6 +440,11 @@ type ModelworkspaceConnection {
 
 type ModelmessageConnection {
   items: [message]!
+  nextToken: String
+}
+
+type ModelgoalConnection {
+  items: [goal]!
   nextToken: String
 }
 
@@ -495,6 +555,11 @@ input ModelInteractionOutcomeInput {
   ne: InteractionOutcome
 }
 
+input ModelGoalTypeInput {
+  eq: GoalType
+  ne: GoalType
+}
+
 # ----------------------------
 # Condition Inputs
 # ----------------------------
@@ -590,6 +655,23 @@ input ModelMessageConditionInput {
   body: ModelStringInput
   userId: ModelIDInput
   username: ModelStringInput
+  createdAt: ModelIntInput
+  updatedAt: ModelIntInput
+}
+
+input ModelGoalConditionInput {
+  and: [ModelGoalConditionInput]
+  not: ModelGoalConditionInput
+  or: [ModelGoalConditionInput]
+
+  title: ModelStringInput
+  type: ModelGoalTypeInput
+  completed: ModelBooleanInput
+  position: ModelIntInput
+
+  workspaceId: ModelIDInput
+  userId: ModelIDInput
+
   createdAt: ModelIntInput
   updatedAt: ModelIntInput
 }
@@ -698,6 +780,24 @@ input ModelMessageFilterInput {
   updatedAt: ModelIntInput
 }
 
+input ModelGoalFilterInput {
+  and: [ModelGoalFilterInput]
+  not: ModelGoalFilterInput
+  or: [ModelGoalFilterInput]
+
+  id: ModelIDInput
+  title: ModelStringInput
+  type: ModelGoalTypeInput
+  completed: ModelBooleanInput
+  position: ModelIntInput
+
+  workspaceId: ModelIDInput
+  userId: ModelIDInput
+
+  createdAt: ModelIntInput
+  updatedAt: ModelIntInput
+}
+
 # ----------------------------
 # Subscription Filter Inputs (Amplify-style)
 # ----------------------------
@@ -800,6 +900,20 @@ input ModelSubscriptionMessageFilterInput {
   createdAt: ModelSubscriptionIntInput
 }
 
+input ModelSubscriptionGoalFilterInput {
+  and: [ModelSubscriptionGoalFilterInput]
+  or: [ModelSubscriptionGoalFilterInput]
+
+  id: ModelSubscriptionIDInput
+  title: ModelSubscriptionStringInput
+  type: ModelSubscriptionStringInput
+  completed: ModelSubscriptionBooleanInput
+  position: ModelSubscriptionIntInput
+  workspaceId: ModelSubscriptionIDInput
+  userId: ModelSubscriptionIDInput
+  createdAt: ModelSubscriptionIntInput
+}
+
 # ----------------------------
 # Operations
 # ----------------------------
@@ -811,6 +925,7 @@ type Query {
   getInteraction(id: String!): interaction
   getWorkspace(id: String!): workspace
   getMessage(id: String!): message
+  getGoal(id: String!): goal
 
   listUsers(
     filter: ModelUserFilterInput
@@ -860,6 +975,14 @@ type Query {
     sortDirection: ModelSortDirection
   ): ModelmessageConnection
 
+  listGoals(
+    filter: ModelGoalFilterInput
+    id: String
+    limit: Int
+    nextToken: String
+    sortDirection: ModelSortDirection
+  ): ModelgoalConnection
+
   listInteractionsByUserId(
     userId: String!
     filter: ModelInteractionFilterInput
@@ -883,6 +1006,15 @@ type Query {
     nextToken: String
     sortDirection: ModelSortDirection
   ): ModelinteractionConnection
+
+  listGoalsByWorkspaceId(
+    workspaceId: String!
+    type: GoalType
+    filter: ModelGoalFilterInput
+    limit: Int
+    nextToken: String
+    sortDirection: ModelSortDirection
+  ): ModelgoalConnection
 
   listWorkspaces(
     filter: ModelWorkspaceFilterInput
@@ -944,6 +1076,19 @@ type Mutation {
     input: DeleteMessageInput!
   ): message
 
+  createGoal(
+    condition: ModelGoalConditionInput
+    input: CreateGoalInput!
+  ): goal
+  updateGoal(
+    condition: ModelGoalConditionInput
+    input: UpdateGoalInput!
+  ): goal
+  deleteGoal(
+    condition: ModelGoalConditionInput
+    input: DeleteGoalInput!
+  ): goal
+
   createWorkspace(
     condition: ModelWorkspaceConditionInput
     input: CreateWorkspaceInput!
@@ -986,6 +1131,13 @@ type Subscription {
     @aws_subscribe(mutations: ["updateMessage"])
   onDeleteMessage(filter: ModelSubscriptionMessageFilterInput): message
     @aws_subscribe(mutations: ["deleteMessage"])
+
+  onCreateGoal(filter: ModelSubscriptionGoalFilterInput): goal
+    @aws_subscribe(mutations: ["createGoal"])
+  onUpdateGoal(filter: ModelSubscriptionGoalFilterInput): goal
+    @aws_subscribe(mutations: ["updateGoal"])
+  onDeleteGoal(filter: ModelSubscriptionGoalFilterInput): goal
+    @aws_subscribe(mutations: ["deleteGoal"])
 
   onCreateWorkspace(filter: ModelSubscriptionWorkspaceFilterInput): workspace
     @aws_subscribe(mutations: ["createWorkspace"])

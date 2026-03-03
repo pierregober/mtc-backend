@@ -1,0 +1,55 @@
+# QUERY
+Query.getGoal:
+  kind: UNIT
+  dataSource: mtcProdGoal
+  code: resolvers/goal/getGoal.ts
+Query.listGoals:
+  kind: UNIT
+  dataSource: mtcProdGoal
+  code: resolvers/goal/listGoals.ts
+Query.listGoalsByWorkspaceId:
+  kind: UNIT
+  dataSource: mtcProdGoal
+  code: resolvers/goal/listGoalsByWorkspaceId.ts
+
+# MUTATION
+Mutation.createGoal:
+  kind: UNIT
+  dataSource: mtcProdGoal
+  code: resolvers/goal/createGoal.ts
+Mutation.updateGoal:
+  kind: UNIT
+  dataSource: mtcProdGoal
+  code: resolvers/goal/updateGoal.ts
+Mutation.deleteGoal:
+  kind: UNIT
+  dataSource: mtcProdGoal
+  code: resolvers/goal/deleteGoal.ts
+
+# SUBSCRIPTION
+Subscription.onCreateGoal:
+  kind: UNIT
+  dataSource: NONE
+  code: resolvers/goal/onCreateGoal.ts
+Subscription.onUpdateGoal:
+  kind: UNIT
+  dataSource: NONE
+  code: resolvers/goal/onUpdateGoal.ts
+Subscription.onDeleteGoal:
+  kind: UNIT
+  dataSource: NONE
+  code: resolvers/goal/onDeleteGoal.ts
+
+# FIELD
+goal.workspace:
+  kind: UNIT
+  type: goal
+  field: workspace
+  dataSource: mtcProdWorkspace
+  code: resolvers/goal/field/workspace.ts
+goal.user:
+  kind: UNIT
+  type: goal
+  field: user
+  dataSource: mtcProdUser
+  code: resolvers/goal/field/user.ts
