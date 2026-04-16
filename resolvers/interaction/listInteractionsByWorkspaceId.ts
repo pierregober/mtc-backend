@@ -1,6 +1,7 @@
 // Vendors
 import { query } from '@aws-appsync/utils/dynamodb'
 import { util } from '@aws-appsync/utils'
+import { normalizeContractInteraction } from './helpers'
 
 // Types
 import type { Context } from '@aws-appsync/utils'
@@ -50,5 +51,13 @@ export function response(ctx: Context) {
   if (ctx.error) {
     util.error(ctx.error.message, ctx.error.type, 'listInteractionsByWorkspaceId')
   }
-  return ctx.result
+
+  if (!ctx.result?.items) {
+    return ctx.result
+  }
+
+  return {
+    ...ctx.result,
+    items: ctx.result.items.map((item) => normalizeContractInteraction(item)),
+  }
 }

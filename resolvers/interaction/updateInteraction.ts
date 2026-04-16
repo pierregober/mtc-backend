@@ -4,6 +4,7 @@ import { util } from '@aws-appsync/utils'
 
 // Helpers
 import { sanitizeObject } from '../_shared'
+import { normalizeContractInteraction } from './helpers'
 
 // Types
 import type { Context } from '@aws-appsync/utils'
@@ -13,10 +14,12 @@ export function request(ctx: Context) {
   const now = util.time.nowEpochSeconds()
   const { id, ...rest } = input
 
-  const updateObject = sanitizeObject({
-    ...rest,
-    updatedAt: now,
-  })
+  const updateObject = sanitizeObject(
+    normalizeContractInteraction({
+      ...rest,
+      updatedAt: now,
+    }),
+  )
 
   return update({
     key: { id },

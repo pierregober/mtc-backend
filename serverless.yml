@@ -12,6 +12,36 @@ provider:
   region: us-west-1
   environment:
     AWS_ACCOUNT_ID: ${aws:accountId}
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:DescribeTable
+            - dynamodb:PutItem
+          Resource:
+            - arn:aws:dynamodb:${aws:region}:${aws:accountId}:table/${env:FEEDBACK_TABLE_NAME, 'mtc-prod-feedback'}
+
+functions:
+  feedback:
+    handler: functions/feedback/handler.main
+    timeout: 15
+    memorySize: 256
+    environment:
+      FEEDBACK_TABLE_NAME: ${env:FEEDBACK_TABLE_NAME, 'mtc-prod-feedback'}
+      RESEND_API_KEY: ${env:RESEND_API_KEY, ''}
+      FEEDBACK_EMAIL_FROM: ${env:FEEDBACK_EMAIL_FROM, ''}
+      FEEDBACK_EMAIL_TO: ${env:FEEDBACK_EMAIL_TO, ''}
+      FEEDBACK_EMAIL_SUBJECT_PREFIX: ${env:FEEDBACK_EMAIL_SUBJECT_PREFIX, '[MTC Feedback]'}
+      FEEDBACK_EMAIL_ENABLED: ${env:FEEDBACK_EMAIL_ENABLED, '1'}
+      FEEDBACK_WEBHOOK_SECRET: ${env:FEEDBACK_WEBHOOK_SECRET, ''}
+    events:
+      - httpApi:
+          method: POST
+          path: /feedback
+      - httpApi:
+          method: OPTIONS
+          path: /feedback
 
 appSync:
   name: mtc

@@ -4,6 +4,7 @@ import { util } from '@aws-appsync/utils'
 
 // Helpers
 import { sanitizeObject } from '../resolvers/_shared'
+import { normalizeContractInteraction } from '../resolvers/interaction/helpers'
 
 // Types
 import type { Context } from '@aws-appsync/utils'
@@ -35,13 +36,15 @@ export function request(ctx: Context) {
 
   const { clientName, ...restInput } = input
 
-  const item = sanitizeObject({
-    id,
-    createdAt: now,
-    updatedAt: now,
-    ...restInput,
-    clientId,
-  })
+  const item = sanitizeObject(
+    normalizeContractInteraction({
+      id,
+      createdAt: now,
+      updatedAt: now,
+      ...restInput,
+      clientId,
+    }),
+  )
 
   return put({
     key: { id: item.id },
